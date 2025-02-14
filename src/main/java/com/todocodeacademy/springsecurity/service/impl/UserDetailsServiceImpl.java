@@ -17,14 +17,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final IUserRepository userRepo;
+    private final IUserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername (String username) throws UsernameNotFoundException {
 
         //tenemos User sec y necesitamos devolver UserDetails
         //traemos el usuario de la bd
-        UserSec userSec = userRepo.findUserEntityByUsername(username)
+        UserSec userSec = userRepository.findUserEntityByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("El usuario " + username + "no fue encontrado"));
 
         //con GrantedAuthority Spring Security maneja permisos

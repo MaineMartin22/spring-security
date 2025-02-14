@@ -48,15 +48,12 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        //sacamos el anterior, el lógico y agregamos el nuevo
-        //  provider.setUserDetailsService(userDetailsService());
         provider.setUserDetailsService(userDetailsService);
-
 
         return provider;
     }
 
-    @Bean
+   /* @Bean
     public UserDetailsService userDetailsService () {
         List<UserDetails> userDetailsList = new ArrayList<>();
 
@@ -85,7 +82,7 @@ public class SecurityConfig {
         );
 
         return new InMemoryUserDetailsManager(userDetailsList);
-    }
+    }*/
 
     //password encoder
     @Bean

@@ -15,12 +15,12 @@ public class RoleServiceImpl implements IRoleService {
     private final IRoleRepository roleRepository;
 
     @Override
-    public List findAll() {
+    public List<Role> findAll() {
         return roleRepository.findAll();
     }
 
     @Override
-    public Optional findById(Long id) {
+    public Optional<Role> findById(Long id) {
         return roleRepository.findById(id);
     }
 
