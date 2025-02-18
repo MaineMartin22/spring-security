@@ -6,6 +6,7 @@ import com.todocodeacademy.springsecurity.service.IUserService;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,5 +39,10 @@ public class UserServiceImpl implements IUserService {
     public void update(UserSec userSec) {
         save(userSec);
     }
-}
 
+    @Override
+    public String encriptPassword(String password) {
+        return new BCryptPasswordEncoder().encode(password);
+    }
+
+}

@@ -16,4 +16,6 @@ public interface IUserService {
 
     public void update(UserSec userSec);
 
+    public String encriptPassword(String password);
+
 }

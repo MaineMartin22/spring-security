@@ -37,11 +37,11 @@ public class SecurityConfig {
                 .build();
     }
 
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
     //creamos authentication provider
     //Agregamos el user Details Service como parámetro
     @Bean
@@ -53,45 +53,10 @@ public class SecurityConfig {
         return provider;
     }
 
-   /* @Bean
-    public UserDetailsService userDetailsService () {
-        List<UserDetails> userDetailsList = new ArrayList<>();
-
-        userDetailsList.add(
-                User.withUsername("todocode")
-                .password("1234") // esto si no está codificado, sino, tiene que seguir el algoritmo de codificación
-                .roles("ADMIN")
-                .authorities("CREATE", "READ", "UPDATE", "DELETE")
-                .build()
-        );
-
-        userDetailsList.add(
-                User.withUsername("seguidor")
-                .password("1234") // esto si no está codificado, sino, tiene que seguir el algoritmo de codificación
-                .roles("USER")
-                .authorities("READ")
-                .build()
-        );
-
-        userDetailsList.add(
-                User.withUsername("actualizador")
-                .password("1234") // esto si no está codificado, sino, tiene que seguir el algoritmo de codificación
-                .roles("USER")
-                .authorities("UPDATE")
-                .build()
-        );
-
-        return new InMemoryUserDetailsManager(userDetailsList);
-    }*/
-
     //password encoder
     @Bean
     public PasswordEncoder passwordEncoder(){
-        //return new BCryptPasswordEncoder();
-         return NoOpPasswordEncoder.getInstance(); // NUNCA USAR EN PROD
+        return new BCryptPasswordEncoder();
+        // return NoOpPasswordEncoder.getInstance(); // NUNCA USAR EN PROD
     }
-
-
-
-
 }
