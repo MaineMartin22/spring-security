@@ -58,15 +58,24 @@ public class RoleController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody Role role) {
-
         Role rol = roleService.findById(id).orElse(null);
-        if (rol!=null) {
-            rol = role;
+
+        if (rol == null) {
+            return ResponseEntity.notFound().build();
         }
+
+        rol.setRole(role.getRole());
+
+        // Asegurar que las entidades Permission estén gestionadas
+        Set<Permission> managedPermissions = new HashSet<>();
+        for (Permission permission : role.getPermissionsList()) {
+            permissionService.findById(permission.getId()).ifPresent(managedPermissions::add);
+        }
+        rol.setPermissionsList(managedPermissions);
 
         roleService.update(rol);
         return ResponseEntity.ok(rol);
-
     }
+
 }
 
