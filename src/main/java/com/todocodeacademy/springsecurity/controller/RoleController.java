@@ -10,12 +10,8 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,18 +22,21 @@ public class RoleController {
     private final IPermissionService permissionService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> roles = roleService.findAll();
         return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<Role> getRoleById(@PathVariable Long id) {
         Optional<Role> role = roleService.findById(id);
         return role.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Role> createRole(@RequestBody Role role) {
         Set<Permission> permissionList = new HashSet<>();
         Permission readPermission;
@@ -54,6 +53,20 @@ public class RoleController {
         role.setPermissionsList(permissionList);
         Role newRole = roleService.save(role);
         return ResponseEntity.ok(newRole);
+    }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody Role role) {
+
+        Role rol = roleService.findById(id).orElse(null);
+        if (rol!=null) {
+            rol = role;
+        }
+
+        roleService.update(rol);
+        return ResponseEntity.ok(rol);
+
     }
 }
 
