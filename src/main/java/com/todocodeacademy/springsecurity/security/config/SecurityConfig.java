@@ -1,5 +1,8 @@
 package com.todocodeacademy.springsecurity.security.config;
 
+import com.todocodeacademy.springsecurity.security.config.filter.JwtTokenValidator;
+import com.todocodeacademy.springsecurity.utils.JwtUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +22,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +30,18 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtUtils jwtUtils;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults()) // validacion de user y password
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtTokenValidator(this.jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
 
